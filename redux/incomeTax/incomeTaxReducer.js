@@ -1,4 +1,4 @@
-import { GETTAXPAYERINFOFORD01, SETERROR, SETTAXPAYERINFOFORD01 } from "./incomeTaxType"
+import { GETTAXPAYERINFOFORD01, SETERROR, SETTAXPAYERINFOFORD01,UPDATETAXPAYERINFOFORD01REGISTER } from "./incomeTaxType"
 
 const initialState = {
     incomeTaxPayerInfoForD01: {
@@ -16,6 +16,7 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+    let obj = {};
     switch (action.type) {
         case SETTAXPAYERINFOFORD01:
             return {
@@ -30,6 +31,19 @@ export default (state = initialState, action) => {
                 message:action.payload
             };
             break
+        case UPDATETAXPAYERINFOFORD01REGISTER:
+            const field = action.payload.field;
+            const value = action.payload.value;
+            console.log("reducer",field);
+            console.log(initialState.incomeTaxPayerInfoForD01.field);
+            obj[action.payload.field] = action.payload.value;
+             return{
+                ...state,
+                incomeTaxPayerInfoForD01: {
+                    ...state.incomeTaxPayerInfoForD01,
+                    ...obj
+                },
+             }
         default:
             return state;
     }

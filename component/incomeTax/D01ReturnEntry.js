@@ -7,8 +7,9 @@ import useFormValidate from '../validation/useFormValidate';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../redux/annex/annexAction';
-import { getTaxPayerInfoForD01 } from '../../redux/incomeTax/incomeTaxAction';
+import { getTaxPayerInfoForD01,updateTaxPayerInforForD01Register } from '../../redux/incomeTax/incomeTaxAction';
 import {ToastContainer,toast} from 'react-toastify';
+import Link from 'next/link'
 
 
 const D01ReturnEntry = () => {
@@ -24,29 +25,37 @@ const D01ReturnEntry = () => {
     const errorMessage = useSelector((state)=>state.taxPayerInfoForD01.message);
     console.log("error here:",errorMessage); 
     
-    
-    if(errorMessage) 
-    {
-        // toast.error(errorMessage, {
-        //     position: toast.POSITION.TOP_RIGHT
-        //   });
-    }
-
+  
     const [taxPayerInfoForD01, settaxPayerInfoForD01] = useState('');
     const handleBlur = (event) => {
         const { name, value } = event.target;
 
         dispatch(getTaxPayerInfoForD01(value))
+      }
 
+    
+    //  const[contctNo, setContcatNo]=useState('');
+    //  const[email, setEmail]=useState('');
+    //  handleChangeNo =(event)=>
+    //  {
 
+    //  }
+    //  handleChangeEmail=()=>
+    //  {
 
-
-      
-
+    //  }
+    const onHandleChange = (event)=>
+    {
+        const KeyValue = {}
+        KeyValue.field = event.target.name;
+        KeyValue.value = event.target.value
+        console.log(event.target.value.length)
+        if(event.target.value.length ===10)
+        {
+             console.log(KeyValue);
+            dispatch(updateTaxPayerInforForD01Register(KeyValue))
+        }
     }
-
-
-
 
     const { handleChange, values, errors } = useFormValidate();
 
@@ -119,17 +128,17 @@ const D01ReturnEntry = () => {
                         </div>
                         <div className='flex flex-wrap'>
                             <label htmlFor="mobileNo" className="align-items-right md:flex-order-0, col-3">मोबाइल नम्बर <span style={{ color: 'red' }}>*</span></label>
-                            <InputText id="mobileNo" maxLength={10} name="mobileNo" type="text" onKeyPress={(event) => {
+                            <InputText id="mobileNo" maxLength={10} name="CONTACTNO" type="text" onKeyPress={(event) => {
                                 if (!/[0-9]/.test(event.key)) {
                                     event.preventDefault();
                                 }
-                            }} className="w-half  mb-3 md:flex-order-1, col-4" onChange={handleChange} value={taxpayerInfoD01Data.CONTACTNO} />
+                            }} className="w-half  mb-3 md:flex-order-1, col-4" onChange={onHandleChange} value={taxpayerInfoD01Data.CONTACTNO} />
                             {errors.mobileNo && <h3>{errors.mobileNo}</h3>}
                             <label htmlFor="email" className=" w-half md:flex-order-2, col-5">२.आफ्नो हालको मोबाइल नम्वर उल्लेख गर्नुहोस  ।</label>
                         </div>
                         <div className='flex flex-wrap'>
                             <label htmlFor="EMAIL" className="align-items-right md:flex-order-0, col-3">इमेल ठेगाना <span style={{ color: 'red' }}>*</span></label>
-                            <InputText id="EMAIL" name="EMAIL" type="text" className="w-half  mb-3 md:flex-order-1, col-4" onChange={handleChange} value={taxPayerInfoForD01.EMAIL||""} />
+                            <InputText id="EMAIL" name="EMAIL" type="text" className="w-half  mb-3 md:flex-order-1, col-4" onChange={onHandleChange} value={taxPayerInfoForD01.EMAIL} />
                             {errors.EMAIL && <h3>{errors.EMAIL}</h3>}
                             <label htmlFor="EMAIL" className=" w-half md:flex-order-2, col-5">३.आफ्नो ईमेल ठेगाना उल्लेख गर्नुहोस ।</label>
                         </div>
@@ -146,7 +155,9 @@ const D01ReturnEntry = () => {
                         <div className='flex flex-wrap'>
                             <div className='col-3'></div>
                             <div className='col-9'>
+                            <Link href="/incometax/d01eselfvoucher">
                                 <Button label="register" icon="pi pi-check bg-green" className="md:flex-order-0" />
+                            </Link>
                                 <Button label="reset" icon="pi pi-times" className="ml-4  bg-red-500" />
                                 <label htmlFor="email" className=" w-half md:flex-order-3, col-5">४.रजिष्टर वटन थिच्नुहोस।</label>
                             </div>

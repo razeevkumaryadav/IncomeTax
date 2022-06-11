@@ -1,8 +1,11 @@
 import {GETTAXPAYERINFOFORD01,SETTAXPAYERINFOFORD01, 
         GETTAXPAYERINFOFORD01REGISTER,
         SETTAXPAYERINFOFORD01REGISTER,
+        UPDATETAXPAYERINFOFORD01REGISTER,
         SETERROR,
-        GETERROR
+        GETERROR,
+        SETCURRENTDATE,
+        
         } 
 from "./incomeTaxType"
 
@@ -36,6 +39,23 @@ export const setTaxPayerInfoForD01Register=(payload)=>
 {
     return{
         type:GETTAXPAYERINFOFORD01REGISTER,
+        payload
+    }
+}
+
+export const updateTaxPayerInforForD01Register = (keyValue)=>
+{
+    console.log("action",keyValue);
+    return {
+        type:UPDATETAXPAYERINFOFORD01REGISTER,
+        payload:keyValue
+    }
+}
+
+export const getCurrentDate =(payload)=>
+{
+    return {
+        type:GETCURRENTDATE,
         payload
     }
 }
