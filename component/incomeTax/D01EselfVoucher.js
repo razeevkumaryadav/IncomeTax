@@ -1,4 +1,4 @@
-import React from 'react';
+import {React,useState} from 'react';
 import { InputText } from 'primereact/inputtext';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
@@ -23,7 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const D01EselfVoucher = () => {
 
-    
+    const data = useSelector((state)=>state.taxPayerInfoForD01);
     const taxpayerInfoD01Data = useSelector((state) => state.taxPayerInfoForD01.incomeTaxPayerInfoForD01);
     const citySelectItems = [
         { label: 'New York', value: 'NY' },
@@ -32,6 +32,37 @@ const D01EselfVoucher = () => {
         { label: 'Istanbul', value: 'IST' },
         { label: 'Paris', value: 'PRS' }
     ];
+    // const fiscalYear = useSelector(())
+    const fiscalyears = data.fiscalYears.map(fs =>({
+                            label:fs.FiscalYear, value:fs.FiscalYear }));
+    // const[fyear,setFyear]=useState("");
+    const[fYear, selectedFYear] = useState("");
+    const onFYearChange = (e)=>{
+        selectedFYear(e.value)
+    }
+     console.log('edata banks',data.banks);
+    const getBanks = data.banks.map(bnk =>({
+        label:bnk.bankNameNepali, value:bnk.bankCode
+    }));
+    console.log("bank front",getBanks);
+    const[bank, setBank] = useState("");
+    const onBankChange = (e)=>
+    {
+        setBank(e.value)
+    }
+    console.log("fontt year",fiscalyears);
+
+    const [expenseAmt,setExpenseAmt]=useState("");
+    const [transactionAmt,setTransactionAmt]=useState("");
+    const onHandleBlur = ()=>
+    {
+
+        
+        alert("blank")
+        setBank("");
+        setExpenseAmt("");
+        setTransactionAmt("");
+    }
 
     return (
         <div>
@@ -84,7 +115,7 @@ const D01EselfVoucher = () => {
                                     {/* <i className="pi pi-user"></i> */}
                                     मिति :
                                 </span>
-                                <InputText placeholder="" />
+                                <InputText placeholder="" value={data.date} />
                             </div>
                         </div>
                         <div className="col-12 md:col-3">
@@ -92,7 +123,7 @@ const D01EselfVoucher = () => {
                                 <span className="p-inputgroup-addon">
                                     कर कार्यालय :
                                 </span>
-                                <InputText placeholder="" />
+                                <InputText placeholder=""  value={taxpayerInfoD01Data.OFFNAMENEP}/>
                             </div>
                         </div>
                         <div className="col-12 md:col-3">
@@ -117,20 +148,20 @@ const D01EselfVoucher = () => {
                <Card header="Filter" className='mt-2 p-2'>
                 <div className='flex flex-wrap'>
                     <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-2">आर्थिक बर्ष :<span style={{ color: 'red' }}>*</span></label>
-                    <Dropdown value="" options={citySelectItems} onChange={(e) => setCity(e.value)} placeholder="Select a City" className='col-2' />
+                    <Dropdown value={fYear} options={fiscalyears} onChange={onFYearChange} placeholder="Select Fiscal Year" className='col-2' />
                     <label htmlFor="email" className=" w-half md:flex-order-2, col-2">१ कृपया आर्थिक बर्ष छान्नुहोस् ।</label>
                 </div>
 
 
                 <div className='flex flex-wrap'>
-                    <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-2">कारोबार रकम : <span style={{ color: 'red' }}>*</span></label>
-                    <InputText id="ADDRESS" type="text" className="w-half  mb-3 md:flex-order-1, col-2" />
-                    <label htmlFor="email" className=" w-half md:flex-order-2, col-2">२ कृपया कारोबार रकम उल्लेख गर्नुहोस् ।</label>
+                    <label htmlFor="TransactionAmt" className="align-items-right md:flex-order-0, col-2">कारोबार रकम : <span style={{ color: 'red' }}>*</span></label>
+                    <InputText id="TransactionAmt" name="TransactionAmt" onChange={(e)=>setTransactionAmt(e.value)} type="text" className="w-half  mb-3 md:flex-order-1, col-2" />
+                    <label htmlFor="TransactionAmt" className=" w-half md:flex-order-2, col-2">२ कृपया कारोबार रकम उल्लेख गर्नुहोस् ।</label>
                 </div>
                 <div className='flex flex-wrap'>
-                    <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-2">कट्टी हुने रकम : <span style={{ color: 'red' }}>*</span></label>
-                    <InputText id="ADDRESS" type="text" className="w-half  mb-3 md:flex-order-1, col-2" />
-                    <label htmlFor="email" className=" w-half md:flex-order-2, col-3">३ कृपया कट्टी हुने रकम उल्लेख गर्नुहोस् र Tab Key थिच्नुहोस्।</label>
+                    <label htmlFor="ExpenseAmt" className="align-items-right md:flex-order-0, col-2">कट्टी हुने रकम : <span style={{ color: 'red' }}>*</span></label>
+                    <InputText id="ExpenseAmt" name ="ExpenseAmt" onChange={(e)=>setExpenseAmt(e.value)}type="text" className="w-half  mb-3 md:flex-order-1, col-2" onBlur={onHandleBlur}/>
+                    <label htmlFor="ExpenseAmt" className=" w-half md:flex-order-2, col-3">३ कृपया कट्टी हुने रकम उल्लेख गर्नुहोस् र Tab Key थिच्नुहोस्।</label>
                 </div>
                 </Card>
                 <Card header="Payment" className='mt-2 p-2'>
@@ -161,8 +192,8 @@ const D01EselfVoucher = () => {
                 </Card>
                 <Card className='mt-2'>
                 <div className='flex flex-wrap'>
-                    <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-1">आर्थिक बर्ष :<span style={{ color: 'red' }}>*</span></label>
-                    <Dropdown value="" options={citySelectItems} onChange={(e) => setCity(e.value)} placeholder="Select a City" className='col-2' />
+                    <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-1">बैंक:<span style={{ color: 'red' }}>*</span></label>
+                    <Dropdown value={bank} options={getBanks} onChange={onBankChange} placeholder="Select bank" className='col-2' />
                     <label htmlFor="email" className=" w-half md:flex-order-2, col-2">४ कृपया बैंक छान्नुहोस् ।</label>
                 </div>
                 </Card>

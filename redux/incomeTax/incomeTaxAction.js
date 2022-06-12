@@ -5,6 +5,13 @@ import {GETTAXPAYERINFOFORD01,SETTAXPAYERINFOFORD01,
         SETERROR,
         GETERROR,
         SETCURRENTDATE,
+        GETCURRENTDATE,
+        GETFISCALYEARS,
+        SETFISCALYEARS,
+        GETD01SELFLIABILITY,
+        SETD01SELFLIABILITY,
+        GETBANKS,
+        SETBANKS,
         
         } 
 from "./incomeTaxType"
@@ -54,12 +61,61 @@ export const updateTaxPayerInforForD01Register = (keyValue)=>
 
 export const getCurrentDate =(payload)=>
 {
+    console.log("date at action ",payload);
     return {
         type:GETCURRENTDATE,
         payload
     }
 }
 
+
+export const getFiscalYear=(payload)=>
+{
+    return {
+        type:GETFISCALYEARS,
+        payload
+    }
+}
+
+export const setFiscalYear=(payload)=>
+{
+    return {
+        type:SETFISCALYEARS,
+        payload
+    }
+}
+
+export const getBanks=(payload)=>
+{
+    return {
+        type:GETBANKS,
+        payload
+    }
+}
+
+export const setBanks=(payload)=>
+{
+    return{
+        type:SETBANKS,
+        payload
+    }
+}
+
+export const getD01SelfLiability=(payload)=>
+{
+    return{
+        type:GETD01SELFLIABILITY,
+        payload
+    }
+}
+export const setD01SelfLiability=(payload)=>
+{
+    return{
+        type:SETD01SELFLIABILITY,
+        payload
+    } 
+
+}
 export const setError=(payload)=>
 {
     console.log("error at set action :",payload);
