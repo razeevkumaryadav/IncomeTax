@@ -1,10 +1,14 @@
 import { toast } from 'react-toastify';
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { httpGetIncomeTaxPayerInfoForD01,httpGetCurrentDate,httpGetFiscalYears,httpGetBanks,httpGetD01SelfLiability } from '../http/httpIncomeTax';
+import { httpGetIncomeTaxPayerInfoForD01,httpGetCurrentDate,httpGetFiscalYears,httpGetBanks,
+    httpGetD01SelfLiability,
+    httpSaveSelfLiability,
+    
+ } from '../http/httpIncomeTax';
 import {setError, setTaxPayerInforForD01,getCurrentDate, getFiscalYear,
 getBanks,setBanks,getD01SelfLiability,setD01SelfLiability,
 } from '../incomeTax/incomeTaxAction';
-import {GETTAXPAYERINFOFORD01} from './incomeTaxType';
+import {GETTAXPAYERINFOFORD01,SAVED01SELFLIABILITY,GETD01SELFLIABILITY } from './incomeTaxType';
 
 function * getTaxPayerInfoForD01(action)
 {
@@ -22,15 +26,15 @@ function * getTaxPayerInfoForD01(action)
 
             const fiscalyear = yield call(httpGetFiscalYears);
             yield put(getFiscalYear(fiscalyear.data.data))
-            console.log("fiscal years:",fiscalyear);
+            console.log("fiscal years at saga:",fiscalyear);
 
             const banks = yield call(httpGetBanks);
             yield put(getBanks(banks.data.data));
             console.log("banks -1",banks);  
             
-            const liability = yield call(httpGetD01SelfLiability);
-            yield put(getD01SelfLiability(liability.data.data));
-            console.log('liability at saga:',liability);
+            // const liability = yield call(httpGetD01SelfLiability);
+            // yield put(getD01SelfLiability(liability.data.data));
+            // console.log('liability at saga:',liability);
         
         console.log("income tax saga after call",taxpayerD01);
        
@@ -48,17 +52,36 @@ function * getTaxPayerInfoForD01(action)
     }
 }
 
-// function *GETTAXPAYERINFOFORD01REGISTER(action)
-// {
-//     try{
-//         yield
-//     }catch(error)
-//     {
-//         console.log('error',error);
-//     }
-// }
+function * postSaveD01SelfLiability(action)
+{
+    try{
+        const submissionno = yield call(httpSaveSelfLiability,action.payload);
+        toast.warning(submissionno?.data?.data?.SubmissionNo);
+        console.log("save liability");
+        console.log(submissionno);
+    }catch(error)
+    {
+        alert(error);
+        toast.error(error.response.data.message);
+    }
+}
+
+function * getD01SelfLiabilities(action)
+{
+    try{
+        console.log("saga selfliabilty",action.payload);
+        const liability = yield call(httpGetD01SelfLiability,action.payload);
+        yield put(setD01SelfLiability(liability.data.data));
+
+    }catch(error)
+    {
+
+    }
+}
 
 export function * waitForFetchTaxPayerInfoForD01()
 {
     yield takeEvery(GETTAXPAYERINFOFORD01,getTaxPayerInfoForD01);
+    yield takeEvery(SAVED01SELFLIABILITY,postSaveD01SelfLiability);
+    yield takeEvery(GETD01SELFLIABILITY,getD01SelfLiabilities)
 }

@@ -5,6 +5,8 @@ SETFISCALYEARS,
 GETBANKS,
 SETBANKS,
 GETD01SELFLIABILITY,
+SETD01SELFLIABILITY,
+SAVED01SELFLIABILITY,
 } from "./incomeTaxType"
 
 const initialState = {
@@ -26,25 +28,26 @@ const initialState = {
     banks:[{}],
     liability:[
         {
-			"taxCatId": "",
-			"pan": "",
-			"fiscalYear": "",
-			"incomeAmount": "",
-			"expenseAmount": "",
-			"taxLiabilityBeforConc": "",
-			"concessionAmount": "",
-			"concession": "",
-			"disCatId": "",
-			"taxLiability": "",
-			"charge117": "",
-			"interest119": "",
-			"int119ConcessionAmount": null,
-			"int119Concession": null,
-			"int119BeforeConcession": null,
-			"int119DisCatId": null,
-			"totalPayableTax": ""
+			// "taxCatId": "",
+			// "pan": "",
+			// "fiscalYear": "",
+			// "incomeAmount": "",
+			// "expenseAmount": "",
+			// "taxLiabilityBeforConc": "",
+			// "concessionAmount": "",
+			// "concession": "",
+			// "disCatId": "",
+			// "taxLiability": "",
+			// "charge117": "",
+			// "interest119": "",
+			// "int119ConcessionAmount": null,
+			// "int119Concession": null,
+			// "int119BeforeConcession": null,
+			// "int119DisCatId": null,
+			// "totalPayableTax": ""
 		}
     ],
+    saveLiability:[{}],
 }
 
 export default (state = initialState, action) => {
@@ -97,9 +100,21 @@ export default (state = initialState, action) => {
         case GETD01SELFLIABILITY:
             return{
                 ...state,
-                liability:action.payload
+                liability:[action.payload]
             };
             break;
+        case SETD01SELFLIABILITY:
+                return{
+                    ...state,
+                    liability:[action.payload]
+                };
+                break;
+        case SAVED01SELFLIABILITY:
+             return{
+                    ...state,
+                    saveLiability:[action.payload]
+
+             }
         default:
             return state;
     }

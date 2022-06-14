@@ -16,26 +16,21 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { useSelector, useDispatch } from 'react-redux';
+import { saveD01SelfLiability,getD01SelfLiability } from '../../redux/incomeTax/incomeTaxAction';
+import {ToastContainer,toast} from 'react-toastify';
 
 
 
 
 
 const D01EselfVoucher = () => {
-
+     const dispatch = useDispatch();
     const data = useSelector((state)=>state.taxPayerInfoForD01);
     const taxpayerInfoD01Data = useSelector((state) => state.taxPayerInfoForD01.incomeTaxPayerInfoForD01);
-    const citySelectItems = [
-        { label: 'New York', value: 'NY' },
-        { label: 'Rome', value: 'RM' },
-        { label: 'London', value: 'LDN' },
-        { label: 'Istanbul', value: 'IST' },
-        { label: 'Paris', value: 'PRS' }
-    ];
+
     // const fiscalYear = useSelector(())
-    const fiscalyears = data.fiscalYears.map(fs =>({
-                            label:fs.FiscalYear, value:fs.FiscalYear }));
-    // const[fyear,setFyear]=useState("");
+    const fiscalyears = data?.fiscalYears?.map(fs =>({label:fs.FiscalYear, value:fs.FiscalYear }))||{label:"no year", value:0};
+ 
     const[fYear, selectedFYear] = useState("");
     const onFYearChange = (e)=>{
         selectedFYear(e.value)
@@ -54,16 +49,67 @@ const D01EselfVoucher = () => {
 
     const [expenseAmt,setExpenseAmt]=useState("");
     const [transactionAmt,setTransactionAmt]=useState("");
-    const onHandleBlur = ()=>
-    {
 
-        
-        alert("blank")
-        setBank("");
-        setExpenseAmt("");
-        setTransactionAmt("");
+    var liabilityparam={
+        "Pan":taxpayerInfoD01Data.PANNO,
+        "FiscalYear":fYear,
+        "TransactionAmt":transactionAmt,
+        "ExpenseAmt":expenseAmt
+    };
+
+    var saveparam={
+
     }
+    console.log("component liability",data.liability);
+    // const liabilities = data.liability.map(value=>({
+    //     pan:value.pan,
+    //     fiscalYear:value.fiscalYear,
+    //     incomeAmount:value.incomeAmount,
+    //     expenseAmount:value.expenseAmount,
+    //     taxLiabilityBeforConc:value.taxLiabilityBeforConc,
+    //     taxLiability:value.taxLiability,
+    //     charge117:value.charge117,
+    //     interest119:value.interest119,
+    //     totalPayableTax:value.totalPayableTax
+    //    }));
+    // alert(expenseAmt);
+    // alert(transactionAmt);
+    const expenseAmtHandleBlur = (event) => {
+        const { name, value } = event.target;
 
+        // dispatch(getTaxPayerInfoForD01(liabilityparam));
+         dispatch(getD01SelfLiability(liabilityparam));
+        console.log("i am here lparam:",liabilityparam);
+        console.log(liabilities);
+      }
+//   if(expenseAmt > 0){
+    const liabilities = data.liability.map(value=>({
+        pan:value.pan,
+        fiscalYear:value.fiscalYear,
+        incomeAmount:value.incomeAmount,
+        expenseAmount:value.expenseAmount,
+        taxLiabilityBeforConc:value.taxLiabilityBeforConc,
+        taxLiability:value.taxLiability,
+        charge117:value.charge117,
+        interest119:value.interest119,
+        totalPayableTax:value.totalPayableTax,
+        taxCatId:value.taxCatId,			
+	    concessionAmount:value.concessionAmount,
+		concession:value.concession,
+		disCatId:value.disCatId,
+		int119ConcessionAmount:value.int119ConcessionAmount,
+		int119Concession:value.int119ConcessionAmount,
+		int119BeforeConcession:value.int119BeforeConcession,
+		int119DisCatId: value.int119DisCatId,
+			
+       }));
+    // }
+    const onSub = ()=> {   dispatch(saveD01SelfLiability());  }
+
+
+    const CalculateData = (rowData) => {
+        return ( rowData.incomeAmount-rowData.expenseAmount);
+    }
     return (
         <div>
             <Card header="Eself Voucher D01" className='mt-2'>
@@ -155,12 +201,12 @@ const D01EselfVoucher = () => {
 
                 <div className='flex flex-wrap'>
                     <label htmlFor="TransactionAmt" className="align-items-right md:flex-order-0, col-2">कारोबार रकम : <span style={{ color: 'red' }}>*</span></label>
-                    <InputText id="TransactionAmt" name="TransactionAmt" onChange={(e)=>setTransactionAmt(e.value)} type="text" className="w-half  mb-3 md:flex-order-1, col-2" />
+                    <InputText id="TransactionAmt" name="TransactionAmt" onChange={(e)=>setTransactionAmt(e.target.value)} type="text" className="w-half  mb-3 md:flex-order-1, col-2" />
                     <label htmlFor="TransactionAmt" className=" w-half md:flex-order-2, col-2">२ कृपया कारोबार रकम उल्लेख गर्नुहोस् ।</label>
                 </div>
                 <div className='flex flex-wrap'>
                     <label htmlFor="ExpenseAmt" className="align-items-right md:flex-order-0, col-2">कट्टी हुने रकम : <span style={{ color: 'red' }}>*</span></label>
-                    <InputText id="ExpenseAmt" name ="ExpenseAmt" onChange={(e)=>setExpenseAmt(e.value)}type="text" className="w-half  mb-3 md:flex-order-1, col-2" onBlur={onHandleBlur}/>
+                    <InputText id="ExpenseAmt" name ="ExpenseAmt" onChange={(e)=>setExpenseAmt(e.target.value)}type="text" className="w-half  mb-3 md:flex-order-1, col-2" onBlur={expenseAmtHandleBlur}/>
                     <label htmlFor="ExpenseAmt" className=" w-half md:flex-order-2, col-3">३ कृपया कट्टी हुने रकम उल्लेख गर्नुहोस् र Tab Key थिच्नुहोस्।</label>
                 </div>
                 </Card>
@@ -178,16 +224,18 @@ const D01EselfVoucher = () => {
                         </tr>
                     </table> */}
                     <div className="card" style={{ border: "1px solid" }} >
-
-                        <DataTable value="" responsiveLayout="scroll" showGridlines     >
-                            <Column field="code" header="आर्थिक बर्ष" sortable></Column>
-                            <Column field="name" header="कारोबार रकम" sortable></Column>
-                            <Column field="category" header="आय रकम" sortable></Column>
-                            <Column field="quantity" header="लाग्ने कर रकम" sortable></Column>
-                            <Column field="quantity" header="दफा ११७ बमोजिमको शुल्क" sortable></Column>
-                            <Column field="quantity" header="दफा ११९ बमोजिमको ब्याज" sortable></Column>
-                            <Column field="price" header="जम्मा तिर्नु पर्ने रकम" sortable></Column>
+                    {expenseAmt >0 &&
+                        <DataTable value={liabilities} responsiveLayout="scroll" showGridlines     >
+                            <Column field="fiscalYear" header="आर्थिक बर्ष" sortable></Column>
+                            <Column field="incomeAmount" header="कारोबार रकम" sortable></Column>
+                            <Column field="expenseAmount" header="कट्टी हुने रकम" sortable ></Column>
+                            <Column field="Income Amount" header="आय रकम" body={CalculateData} sortable ></Column>
+                            <Column field="taxLiability" header="लाग्ने कर रकम" sortable></Column>
+                            <Column field="charge117" header="दफा ११७ बमोजिमको शुल्क" sortable></Column>
+                            <Column field="interest119" header="दफा ११९ बमोजिमको ब्याज" sortable></Column>
+                            <Column field="totalPayableTax" header="जम्मा तिर्नु पर्ने रकम" sortable></Column>
                         </DataTable>
+                    }
                     </div>
                 </Card>
                 <Card className='mt-2'>
@@ -200,11 +248,12 @@ const D01EselfVoucher = () => {
                 <Card className='mt-2 p-2'>
                 <div className='flex flex-wrap'>
                     <label htmlFor="ADDRESS" className="align-items-right md:flex-order-0, col-10">तपाईंले घोषणा गरेको कारोबार रकम र कट्टी हुने रकम ठीक भए नभएको पुन चेकजाच गर्नुहोस् । यदि ठीक भएमा Submit बटन थिच्नुहोस् । बेठीक भएमा Delete गरी पुन विवरण भर्नु होस् ।<span style={{ color: 'red' }}>*</span></label>
-                    <Button>Submit</Button>
+                    <Button onClick={onSub}>Submit</Button>
                     
                 </div>
                 </Card>
             </Card>
+            <ToastContainer />
         </div>
     )
 }

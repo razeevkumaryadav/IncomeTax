@@ -12,6 +12,7 @@ import {GETTAXPAYERINFOFORD01,SETTAXPAYERINFOFORD01,
         SETD01SELFLIABILITY,
         GETBANKS,
         SETBANKS,
+        SAVED01SELFLIABILITY,
         
         } 
 from "./incomeTaxType"
@@ -102,12 +103,16 @@ export const setBanks=(payload)=>
 }
 
 export const getD01SelfLiability=(payload)=>
-{
+{   console.log('get selfliabilty at action param:',payload);
     return{
         type:GETD01SELFLIABILITY,
         payload
     }
 }
+// export const setD01SelfLiability=(payload)=>
+// {
+
+// }
 export const setD01SelfLiability=(payload)=>
 {
     return{
@@ -115,6 +120,14 @@ export const setD01SelfLiability=(payload)=>
         payload
     } 
 
+}
+export const saveD01SelfLiability=(payload)=>
+{
+    console.log("action saveliability");
+    return {
+        type:SAVED01SELFLIABILITY,
+        payload
+    }
 }
 export const setError=(payload)=>
 {
