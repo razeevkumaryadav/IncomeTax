@@ -6,6 +6,7 @@ import "primeflex/primeflex.css";
 import store from '../redux/store';
 import { Provider } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyApp({ Component, pageProps }) {
   return( 

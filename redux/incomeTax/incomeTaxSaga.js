@@ -13,15 +13,17 @@ import {GETTAXPAYERINFOFORD01,SAVED01SELFLIABILITY,GETD01SELFLIABILITY } from '.
 function * getTaxPayerInfoForD01(action)
 {
     try{
+        // debugger;
         console.log("call at saga",action.payload);
             const param = action.payload;
             const taxpayerD01 = yield call(httpGetIncomeTaxPayerInfoForD01,param);
                    
-            console.log("TAX",taxpayerD01);
+            console.log("TAX:",taxpayerD01);
             yield put(setTaxPayerInforForD01(taxpayerD01?.data?.data));
             
+            console.log("befire current date")
             const currentdate = yield call(httpGetCurrentDate);
-            console.log("date",currentdate.data.data.date);
+            console.log(" saga current date",currentdate.data.data.date);
             yield put(getCurrentDate(currentdate.data.data));
 
             const fiscalyear = yield call(httpGetFiscalYears);
@@ -40,10 +42,10 @@ function * getTaxPayerInfoForD01(action)
        
     } catch(error)
     {
-        console.log("1");
-        console.log(error.response.data.message);
+        // console.log("1");
+        console.log("error at saga",error);
         // return toast.error(error);
-         toast.error(error.response.data.message);
+        //  toast.error(error.response.data.message);
         yield put(setTaxPayerInforForD01(null));
         // yield put(setError(error.response.data.message))
         
@@ -69,13 +71,14 @@ function * postSaveD01SelfLiability(action)
 function * getD01SelfLiabilities(action)
 {
     try{
-        console.log("saga selfliabilty",action.payload);
+        console.log("saga selfliabilty param",action.payload);
         const liability = yield call(httpGetD01SelfLiability,action.payload);
+        console.log('saga libility',liability.data.data);
         yield put(setD01SelfLiability(liability.data.data));
 
     }catch(error)
     {
-
+      console.log("error",error.message);
     }
 }
 

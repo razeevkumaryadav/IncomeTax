@@ -10,6 +10,7 @@ import {GETTAXPAYERINFOFORD01,SETTAXPAYERINFOFORD01,
         SETFISCALYEARS,
         GETD01SELFLIABILITY,
         SETD01SELFLIABILITY,
+        DELETESELFLIABILITY,
         GETBANKS,
         SETBANKS,
         SAVED01SELFLIABILITY,
@@ -109,17 +110,24 @@ export const getD01SelfLiability=(payload)=>
         payload
     }
 }
-// export const setD01SelfLiability=(payload)=>
-// {
 
-// }
 export const setD01SelfLiability=(payload)=>
 {
+    console.log(
+        'SET LIABILITY CALL HERE FROM ACTION',payload
+    )
     return{
         type:SETD01SELFLIABILITY,
         payload
     } 
 
+}
+export const deleteSelfLiability=(fiscalyear)=>
+{
+    return{
+        type:DELETESELFLIABILITY,
+        payload:fiscalyear
+    }
 }
 export const saveD01SelfLiability=(payload)=>
 {

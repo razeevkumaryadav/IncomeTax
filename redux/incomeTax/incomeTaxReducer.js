@@ -6,6 +6,7 @@ GETBANKS,
 SETBANKS,
 GETD01SELFLIABILITY,
 SETD01SELFLIABILITY,
+DELETESELFLIABILITY,
 SAVED01SELFLIABILITY,
 } from "./incomeTaxType"
 
@@ -27,7 +28,7 @@ const initialState = {
     fiscalYears:[{}],
     banks:[{}],
     liability:[
-        {
+        // {
 			// "taxCatId": "",
 			// "pan": "",
 			// "fiscalYear": "",
@@ -45,7 +46,7 @@ const initialState = {
 			// "int119BeforeConcession": null,
 			// "int119DisCatId": null,
 			// "totalPayableTax": ""
-		}
+		// }
     ],
     saveLiability:[{}],
 }
@@ -97,16 +98,25 @@ export default (state = initialState, action) => {
                 banks:action.payload
             };
             break;
-        case GETD01SELFLIABILITY:
-            return{
-                ...state,
-                liability:[action.payload]
-            };
-            break;
+        // case GETD01SELFLIABILITY:
+        //     // return{
+        //     //     ...state,
+        //     //     liability:[action.payload]
+        //     // };
+        //     break;
         case SETD01SELFLIABILITY:
+            console.log("state",state);
+            console.log('set liability',action.payload);
                 return{
                     ...state,
-                    liability:[action.payload]
+                    liability:[
+                        ...state.liability,
+                          action.payload
+                    ]
+                    
+                    
+                    
+
                 };
                 break;
         case SAVED01SELFLIABILITY:
@@ -115,6 +125,17 @@ export default (state = initialState, action) => {
                     saveLiability:[action.payload]
 
              }
+
+        case DELETESELFLIABILITY:
+            const filterdata = state.liability.filter(liabilityvalue=>liabilityvalue.fiscalYear!==action.payload);
+            state.liability=filterdata;
+            console.log("delted data",filterdata);
+            return{
+                // ...state,
+                // liability:[state.liability.filter(liabilityvalue=>liabilityvalue.fiscalYears!==action.payload)]
+                ...state,
+                ...state.liability
+            }
         default:
             return state;
     }

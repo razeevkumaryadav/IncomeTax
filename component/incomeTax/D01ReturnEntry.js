@@ -20,8 +20,13 @@ const D01ReturnEntry = () => {
 
    
     // recieve data from store
-  
     const taxpayerInfoD01Data = useSelector((state) => state.taxPayerInfoForD01.incomeTaxPayerInfoForD01);
+   
+    // useEffect(()=>{
+    //     // const taxpayerInfoD01Data = useSelector((state) => state.taxPayerInfoForD01.incomeTaxPayerInfoForD01);
+    // },[])
+  
+    
     const errorMessage = useSelector((state)=>state.taxPayerInfoForD01.message);
     console.log("error here:",errorMessage); 
     
